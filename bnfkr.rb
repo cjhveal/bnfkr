@@ -10,11 +10,12 @@ class Parser
     reset
   end
 
-
+  # parse program, stripping out everything but BF instructions and splitting by charater
   def read program
     program.tr('^+\-<>[],.', '').split(//)
   end
 
+  # excecute a list of instruction, iterating through and calling each
   def exec ops = []
     reset
     @ops = ops
@@ -25,11 +26,13 @@ class Parser
     end
   end
 
+  # parse and execute a BF program
   def run program
     exec read program
   end
 
   protected
+  # get a single character from the keyboard
   def getc
     begin
       system("stty raw -echo")
