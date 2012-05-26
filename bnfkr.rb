@@ -1,12 +1,15 @@
 class Parser
   attr_reader :array, :pointer, :loop_stack, :op_pointer, :ops
 
+  ARRAY_SIZE = 30000
+
   def initialize
     @operators = {"+" => lambda { @array[@pointer] += 1 }, "-" => lambda { @array[@pointer] -= 1 },
                   ">" => lambda { @pointer += 1 }, "<" => lambda { @pointer -= 1 },
-                  "[" => lambda { @loop_stack.push @op_pointer }, "]" => lambda { @array[@pointer] == 0 ? @loop_stack.pop : @op_pointer = @loop_stack.last },
-                  "." => lambda { print @array[@pointer].chr }, "," => lambda { getc } }
-    @array = Array.new 30000
+                  "[" => lambda { @loop_stack.push @op_pointer },
+                  "]" => lambda { @array[@pointer] == 0 ? (raise "unmatched ]" unless @loop_stack.pop) : @op_pointer = @loop_stack.last },
+                  "." => lambda { print @array[@pointer].chr }, "," => lambda { @array[@pointer] = getc.ord } }
+    @array = Array.new ARRAY_SIZE
     reset
   end
 
@@ -21,9 +24,11 @@ class Parser
     @ops = ops
     until @op_pointer == @ops.length
       instruction = @ops[@op_pointer]
+      raise "No such instruction '#{instruction}'" unless @operators.include? instruction
       @operators[instruction].call
       @op_pointer += 1
     end
+    raise "unclosed [" unless @loop_stack.empty?
   end
 
   # parse and execute a BF program
