@@ -2,6 +2,7 @@ class Parser
   attr_reader :array, :pointer, :loop_stack, :op_pointer, :ops
 
   ARRAY_SIZE = 30000
+  ELEMENT_SIZE = 255;
 
   def initialize
     @operators = {"+" => lambda { @array[@pointer] += 1 }, "-" => lambda { @array[@pointer] -= 1 },
@@ -26,6 +27,7 @@ class Parser
       instruction = @ops[@op_pointer]
       raise "No such instruction '#{instruction}'" unless @operators.include? instruction
       @operators[instruction].call
+      normalize
       @op_pointer += 1
     end
     raise "unclosed [" unless @loop_stack.empty?
@@ -37,6 +39,12 @@ class Parser
   end
 
   protected
+  # keep everything within bounds
+  def normalize
+    @pointer %= ARRAY_SIZE
+    @array[@pointer] %= ELEMENT_SIZE
+  end
+
   # get a single character from the keyboard
   def getc
     begin
