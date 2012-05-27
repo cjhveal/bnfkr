@@ -9,7 +9,7 @@ class Parser
                   ">" => lambda { @pointer += 1 }, "<" => lambda { @pointer -= 1 },
                   "[" => lambda { @loop_stack.push @op_pointer },
                   "]" => lambda { @array[@pointer] == 0 ? (raise "unmatched ]" unless @loop_stack.pop) : @op_pointer = @loop_stack.last },
-                  "." => lambda { print @array[@pointer].chr }, "," => lambda { @array[@pointer] = getc.ord } }
+                  "." => lambda { print @array[@pointer].chr }, "," => lambda { @array[@pointer] = STDIN.getc.ord } }
     @array = Array.new ARRAY_SIZE
     reset
   end
@@ -43,16 +43,6 @@ class Parser
   def normalize
     @pointer %= ARRAY_SIZE
     @array[@pointer] %= ELEMENT_SIZE
-  end
-
-  # get a single character from the keyboard
-  def getc
-    begin
-      system("stty raw -echo")
-      STDIN.getc
-    ensure
-      system("stty -raw echo")
-    end
   end
 
   def reset
