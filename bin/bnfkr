@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+require '../bnfkr.rb'
+
+parser = Parser.new
+
+begin
+  parser.run ARGF.readlines.join
+end until ARGV.empty?
+
