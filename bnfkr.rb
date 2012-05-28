@@ -1,5 +1,5 @@
 class Parser
-  attr_reader :array, :pointer, :loop_stack, :op_pointer, :ops
+  attr_accessor :array, :pointer, :loop_stack, :op_pointer, :ops
 
   ARRAY_SIZE = 30000
   ELEMENT_SIZE = 255;

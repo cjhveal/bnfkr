@@ -24,8 +24,25 @@ describe Parser do
   end
 
   describe "#normalize" do
-    it "should keep the pointer within the array"
-    it "should keep each cell within its limit"
+    it "should keep the pointer within the array" do
+      @parser.pointer = -1
+      @parser.send :normalize
+      @parser.pointer.should eq Parser::ARRAY_SIZE-1
+
+      @parser.pointer = Parser::ARRAY_SIZE
+      @parser.send :normalize
+      @parser.pointer.should eq 0
+    end
+
+    it "should keep each cell within its limit" do
+      @parser.array[@parser.pointer] = -1
+      @parser.send :normalize
+      @parser.array[@parser.pointer].should eq Parser::ELEMENT_SIZE-1
+
+      @parser.array[@parser.pointer] = Parser::ELEMENT_SIZE
+      @parser.send :normalize
+      @parser.array[@parser.pointer].should eq 0
+    end
   end
 
   describe "#reset" do
