@@ -7,8 +7,16 @@ describe Parser do
   end
 
   describe "#read" do
-    it "should strip out any non-bf instructions"
-    it "should return an array of one character instructions"
+    it "should strip out any non-bf instructions" do
+      @parser.read("abcdefghijklmnopqrstuvwxyz 123456789").should eq []
+      @parser.read("a+ b- c> d< e[ f] g. i, ").should eq %w(+ - > < [ ] . ,)
+    end
+
+    it "should return an array of one character instructions" do
+      parsed = @parser.read("a+ b- c> d< e[ f] g. i,")
+      parsed.class.should eq Array
+      parsed.all? {|elem| elem.class == String && elem.length == 1 }.should be_true
+    end
   end
 
   describe "#exec" do
