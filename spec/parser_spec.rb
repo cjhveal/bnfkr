@@ -1,5 +1,5 @@
 require 'rspec'
-require './bnfkr.rb'
+require './lib/bnfkr.rb'
 
 describe Parser do
   before(:all) do
